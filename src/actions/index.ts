@@ -2,8 +2,9 @@
 
 import { db } from "@/db";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-// using this wa (sending the formSate), we can validate the form data without sending JS to the browser
+// using this way (sending the formSate), we can validate the form data without sending JS to the browser
 export async function createSnippet(
     formSate: { message: string },
     formData: FormData
@@ -44,6 +45,7 @@ export async function createSnippet(
         }
     }
 
+    revalidatePath('/');
     redirect('/')
 }
 
@@ -53,6 +55,7 @@ export async function editSnippet(id: number, code: string) {
         data: { code },
     });
 
+    revalidatePath(`/snippets/${id}`);
     redirect(`/snippets/${id}`)
 }
 
@@ -61,5 +64,6 @@ export async function deleteSnippet(id: number) {
         where: { id },
     });
 
-    redirect('/')
+    revalidatePath('/');
+    redirect('/');
 }
